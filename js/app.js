@@ -62,7 +62,8 @@
 	Imba.defineTag('app', function(tag){
 		
 		tag.prototype.hash = function (){
-			return window.location.hash;
+			return "#/";
+			// window:location:hash
 		};
 		
 		tag.prototype.model = function (){
@@ -74,8 +75,6 @@
 			self._counter = 0;
 			self._model = Todos;
 			self._model.load();
-			
-			// render on every change
 			self._model.subscribe(function() {
 				return self.render();
 			});
@@ -96,11 +95,6 @@
 			};
 		};
 		
-		
-		tag.prototype.add = function (title){
-			if (title.trim()) { this.model().addTodo(title.trim()) };
-			return this;
-		};
 		
 		tag.prototype.toggleAll = function (e){
 			return this.model().toggleAll(e.target().checked());
@@ -124,6 +118,7 @@
 		// dependencies, or manually calling render.
 		tag.prototype.render = function (){
 			var t0, self=this, t1, t2;
+			this._counter++;
 			var all = this.model().items();
 			var active = all.filter(function(todo) {
 				return !todo.completed;
@@ -136,7 +131,7 @@
 			
 			return this.setChildren(Imba.static([
 				(t0 = this.$a || (this.$a = t$('header'))).flag('header').setContent(Imba.static([
-					(t0.$$a = t0.$$a || t$('h1')).setText(("todos " + (this._counter++))).end(),
+					(t0.$$a = t0.$$a || t$('h1')).setText(("todos " + this._counter)).end(),
 					(t0.$$b = t0.$$b || t$('input')).flag('new-todo').setType('text').setPlaceholder('What needs to be done?').end()
 				],1)).end(),
 				

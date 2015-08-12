@@ -171,7 +171,6 @@ var app = app || {};
 			document.getElementsByClassName('todoapp')[0]
 		);
 	}
-	console.log("got here!");
 	model.subscribe(render);
 	render();
 
@@ -185,16 +184,4 @@ var app = app || {};
 		return model;
 	};
 
-	window.BENCHS = function(times) {
-		if(times === undefined) times = 1000;
-		times = times || 1000;
-
-
-		console.log("benchmark it");
-		console.time("bench");
-		var i = times;
-		while (--i > 0){ render(); };
-		console.timeEnd("bench");
-		return;
-	};
 })();

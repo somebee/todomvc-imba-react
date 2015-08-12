@@ -48,7 +48,8 @@ extend tag htmlelement
 tag app
 
 	def hash
-		window:location:hash
+		"#/"
+		# window:location:hash
 
 	def model
 		@model
@@ -57,10 +58,9 @@ tag app
 		@counter = 0
 		@model = Todos
 		@model.load
-
-		# render on every change
 		@model.subscribe do render
-		window.addEventListener 'hashchange' do render
+		window.addEventListener 'hashchange' do
+			render
 		render
 		self
 
@@ -71,10 +71,6 @@ tag app
 			model.addTodo(value)
 			e.target.value = ""
 
-
-	def add title
-		model.addTodo(title.trim) if title.trim
-		self
 
 	def toggleAll e
 		model.toggleAll e.target.checked
@@ -95,6 +91,7 @@ tag app
 	# need for the added complexity of registering listeners, tracking
 	# dependencies, or manually calling render.
 	def render
+		@counter++
 		var all    = model.items
 		var active = all.filter do |todo| !todo:completed
 		var done   = all.filter do |todo| todo:completed
@@ -103,7 +100,7 @@ tag app
 
 		<self>
 			<header.header>
-				<h1> "todos {@counter++}"
+				<h1> "todos {@counter}"
 				<input.new-todo type='text' placeholder='What needs to be done?'>
 
 			if all:length > 0
