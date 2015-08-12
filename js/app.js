@@ -8,56 +8,27 @@
 	
 	Todos = new TodoModel('imba-todos');
 	
-	BENCHS = function(times,renderer) {
-		
-		// clear and add 10 tasks initially
-		if(times === undefined) times = 1000;
-		if(renderer === undefined) renderer = 'render';
-		Todos.setItems([]); // clear
-		for (var len=10, i1 = 0; i1 <= len; i1++) {
-			Todos.addTodo(("Todo " + i1));
-		};
-		
-		console.time("bench");
-		
-		
-		var app = id$('app');
-		var i = times;
-		while (--i > 0){
-			app[renderer]();
-		};
-		console.timeEnd("bench");
-		return;
-	};
-	
-	Imba.extendTag('htmlelement', function(tag){
-		
-		// optimization for flags 
-		tag.prototype.flag = function (flag,bool){
-			this._flags || (this._flags = {});
-			
-			if (arguments.length == 2) {
-				if (this._flags[flag] != !!bool) {
-					bool ? (this._dom.classList.add(flag)) : (this._dom.classList.remove(flag));
-					this._flags[flag] = !!bool;
-				};
-			} else if (!this._flags[flag]) {
-				this._dom.classList.add(flag);
-				this._flags[flag] = true;
-			};
-			
-			return this;
-		};
-		
-		tag.prototype.unflag = function (flag){
-			if (this._flags && this._flags[flag]) {
-				this._flags[flag] = false;
-				this._dom.classList.remove(flag);
-			};
-			
-			return this;
-		};
-	});
+	// this makes it 10% faster. consider moving into imba runtime.
+	// extend tag htmlelement	
+	// optimization for flags 
+	//	def flag flag, bool
+	//		@flags ||= {}
+	//
+	//		if arguments:length == 2
+	//			if @flags[flag] != !!bool
+	//				bool ? @dom:classList.add(flag) : @dom:classList.remove(flag)
+	//				@flags[flag] = !!bool
+	//		elif !@flags[flag]
+	//			@dom:classList.add(flag)
+	//			@flags[flag] = yes
+	//
+	//		return self
+	//	def unflag flag
+	//		if @flags and @flags[flag]
+	//			@flags[flag] = no
+	//			@dom:classList.remove(flag)
+	//
+	//		return self
 	
 	Imba.defineTag('app', function(tag){
 		
@@ -105,16 +76,7 @@
 			return this.model().clearCompleted();
 		};
 		
-		// load todos from localstorage
-		// this is the method that actually takes care of rendering the whole app
-		// Imba has a very efficient way of caching the actual elements.
-		// this method can easily be called every frame without any performance
-		// degradation at all. 
-		//
-		// A low-end mbp retina (safari 9.0) can render this example 30000 ops/sec
-		// or 500 ops/frame. With this kind of performance there is little
-		// need for the added complexity of registering listeners, tracking
-		// dependencies, or manually calling render.
+		
 		tag.prototype.render = function (){
 			var t0, self=this, t1, t2;
 			this._counter++;
@@ -131,7 +93,7 @@
 			return this.setChildren(Imba.static([
 				(t0 = this.$a || (this.$a = t$('header'))).flag('header').setContent(Imba.static([
 					(t0.$$a = t0.$$a || t$('h1')).setText(("todos " + this._counter)).end(),
-					(t0.$$b = t0.$$b || t$('input')).flag('new-todo').setType('text').setPlaceholder('What needs to be done?').end()
+					(t0.$$b = t0.$$b || t$('input')).flag('new-todo').setType('text').setPlaceholder('What needs to be done?').setAutofocus(true).end()
 				],1)).end(),
 				
 				(all.length > 0) && (Imba.static([
@@ -169,6 +131,11 @@
 	// create an instance of the app (with id app)
 	var app = ti$('app','app').end();
 	
+	// append it to the dom
+	q$$('.todoapp').append(app);
+	
+	
+	// stuff for benchmarking
 	window.renderAlways = false;
 	
 	// now make things accessible for benchmark
@@ -181,8 +148,5 @@
 	window.todosModel = function (){
 		return Todos;
 	};
-	
-	// append it to the dom
-	q$$('.todoapp').append(app);
 
 })()

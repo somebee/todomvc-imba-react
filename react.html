@@ -5,6 +5,7 @@
 		<title>React • TodoMVC</title>
 		<link rel="stylesheet" href="node_modules/todomvc-common/base.css">
 		<link rel="stylesheet" href="node_modules/todomvc-app-css/index.css">
+		<link rel="stylesheet" href="css/app.css">
 	</head>
 	<body>
 		<section class="todoapp"></section>
@@ -14,18 +15,22 @@
 			<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
 		</footer>
 
+		<section class="benchmark">
+			<button id="benchmarkbtn"> Run benchmark</button>
+			<section id="benchmarklog"></section>
+		</section>
+
 		<script src="node_modules/todomvc-common/base.js"></script>
 		<script src="node_modules/react/dist/react-with-addons.js"></script>
 		<script src="node_modules/director/build/director.js"></script>
 
-		<script src="js/benchmark.js"></script>
 		<script src="react/utils.js"></script>
 		<script src="react/todoModel.js"></script>
-		<!-- jsx is an optional syntactic sugar that transforms methods in React's
-		`render` into an HTML-looking format. Since the two models above are
-		unrelated to React, we didn't need those transforms. -->
+	
 		<script src="react/todoItem.js"></script>
 		<script src="react/footer.js"></script>
 		<script src="react/app.js"></script>
+
+		<script src="js/benchmark.js"></script>
 	</body>
 </html>

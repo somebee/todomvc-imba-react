@@ -6,3 +6,16 @@ remove this comment if used
 remove this file if not
 
 */
+
+.benchmark {
+	padding: 30px;
+}
+
+.benchmark button {
+	-webkit-appearance: initial;
+	border: 1px solid black;
+	padding: 10px;
+	display: block;
+	margin: 0 auto;
+	text-align: center;
+}

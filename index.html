@@ -1,10 +1,11 @@
 <!doctype html>
-<html lang="en" data-framework="react">
+<html lang="en" data-framework="imba">
 	<head>
 		<meta charset="utf-8">
 		<title>Imba • TodoMVC</title>
 		<link rel="stylesheet" href="node_modules/todomvc-common/base.css">
 		<link rel="stylesheet" href="node_modules/todomvc-app-css/index.css">
+		<link rel="stylesheet" href="css/app.css">
 	</head>
 	<body>
 		<section class="todoapp"></section>
@@ -13,10 +14,16 @@
 			<p>Created by <a href="http://github.com/somebee/">Sindre Aarsaether</a></p>
 			<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
 		</footer>
+
+		<section class="benchmark">
+			<button id="benchmarkbtn"> Run benchmark</button>
+			<section id="benchmarklog"></section>
+		</section>
+
 		<script src="js/imba.js"></script>
-		<script src="js/benchmark.js"></script>
 		<script src="js/todoModel.js"></script>
 		<script src="js/todoItem.js"></script>
 		<script src="js/app.js"></script>
+		<script src="js/benchmark.js"></script>
 	</body>
 </html>
