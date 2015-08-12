@@ -2,13 +2,19 @@
 	
 	// externs;
 	
-	function part(name,times,blk){
+	function bench(name,times,blk){
 		console.group(name);
 		console.time('time');
+		var i = 0;
 		var start = new Date();
-		blk();
+		
+		while ((i++) < times){
+			blk();
+		};
+		
 		var end = new Date();
 		var time = (end - start) / 1000;
+		
 		console.timeEnd('time');
 		console.log(("" + ((times / time).toFixed(2)) + " ops/sec"));
 		return console.groupEnd(name);
@@ -28,24 +34,27 @@
 		};
 		
 		// render a few times before starting
-		for (var len=100, i1 = 0; i1 <= len; i1++) {
+		for (var len=1000, i1 = 0; i1 <= len; i1++) {
 			render();
-		};
+		}; // warm up
 		
 		renderAlways = false;
-		part("with extra logic in shouldComponentUpdate",times,function() {
-			for (var len=times, i2 = 0, res=[]; i2 <= len; i2++) {
-				res.push(render());
-			};
-			return res;
+		bench("with extra logic in shouldComponentUpdate",times,function() {
+			return render();
 		});
 		
 		renderAlways = true;
-		part("full rerender of whole app",times,function() {
-			for (var len=times, i2 = 0, res=[]; i2 <= len; i2++) {
-				res.push(render());
-			};
-			return res;
+		bench("full rerender of whole app",times,function() {
+			return render();
+		});
+		
+		// we want to do this without informing about any changes,
+		// and without persisting. So we do it manually
+		var items = model._items || model.todos;
+		
+		bench("moving item from top to bottom",times,function() {
+			items.push(items.shift()); // move item from top to bottom9
+			return render(); // render manually
 		});
 		
 		return;

@@ -48,8 +48,7 @@ extend tag htmlelement
 tag app
 
 	def hash
-		"#/"
-		# window:location:hash
+		window:location:hash
 
 	def model
 		@model

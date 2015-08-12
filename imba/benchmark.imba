@@ -1,13 +1,18 @@
 
 extern window, renderAlways
 
-def part name, times, blk
+def bench name, times, blk
 	console.group(name)
 	console.time('time')
+	var i = 0
 	var start = Date.new
-	blk()
+
+	while (i++) < times
+		blk()
+
 	var end = Date.new
 	var time = (end - start) / 1000
+
 	console.timeEnd('time')
 	console.log "{(times / time).toFixed(2)} ops/sec"
 	console.groupEnd(name)
@@ -23,14 +28,22 @@ BENCH = do |times = 1000|
 	model.addTodo("Todo {i}") for i in [0..10]
 
 	# render a few times before starting
-	render() for i in [0..100]
+	render() for i in [0..1000] # warm up
 
 	renderAlways = no
-	part("with extra logic in shouldComponentUpdate", times) do
-		render() for i in [0..times]
+	bench("with extra logic in shouldComponentUpdate", times) do
+		render()
 
 	renderAlways = yes
-	part("full rerender of whole app", times) do
-		render() for i in [0..times]
+	bench("full rerender of whole app", times) do
+		render()
+
+	# we want to do this without informing about any changes,
+	# and without persisting. So we do it manually
+	var items = model.@items or model:todos
+
+	bench("moving item from top to bottom", times) do
+		items.push( items.shift ) # move item from top to bottom9
+		render() # render manually
 
 	return

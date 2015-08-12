@@ -62,8 +62,7 @@
 	Imba.defineTag('app', function(tag){
 		
 		tag.prototype.hash = function (){
-			return "#/";
-			// window:location:hash
+			return window.location.hash;
 		};
 		
 		tag.prototype.model = function (){
