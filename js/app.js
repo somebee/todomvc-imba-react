@@ -9,26 +9,32 @@
 	Todos = new TodoModel('imba-todos');
 	
 	// this makes it 10% faster. consider moving into imba runtime.
-	// extend tag htmlelement	
-	// optimization for flags 
-	//	def flag flag, bool
-	//		@flags ||= {}
-	//
-	//		if arguments:length == 2
-	//			if @flags[flag] != !!bool
-	//				bool ? @dom:classList.add(flag) : @dom:classList.remove(flag)
-	//				@flags[flag] = !!bool
-	//		elif !@flags[flag]
-	//			@dom:classList.add(flag)
-	//			@flags[flag] = yes
-	//
-	//		return self
-	//	def unflag flag
-	//		if @flags and @flags[flag]
-	//			@flags[flag] = no
-	//			@dom:classList.remove(flag)
-	//
-	//		return self
+	Imba.extendTag('htmlelement', function(tag){
+		// optimization for flags 
+		tag.prototype.flag = function (flag,bool){
+			this._flags || (this._flags = {});
+			
+			if (arguments.length == 2) {
+				if (this._flags[flag] != !!bool) {
+					bool ? (this._dom.classList.add(flag)) : (this._dom.classList.remove(flag));
+					this._flags[flag] = !!bool;
+				};
+			} else if (!this._flags[flag]) {
+				this._dom.classList.add(flag);
+				this._flags[flag] = true;
+			};
+			
+			return this;
+		};
+		tag.prototype.unflag = function (flag){
+			if (this._flags && this._flags[flag]) {
+				this._flags[flag] = false;
+				this._dom.classList.remove(flag);
+			};
+			
+			return this;
+		};
+	});
 	
 	Imba.defineTag('app', function(tag){
 		

@@ -11,11 +11,15 @@ remove this file if not
 	padding: 30px;
 }
 
-.benchmark button {
+.benchmark  header {
+	text-align: center;
+}
+.benchmark button,
+.benchmark input  {
 	-webkit-appearance: initial;
 	border: 1px solid black;
 	padding: 10px;
-	display: block;
+	display: inline-block;
 	margin: 0 auto;
 	text-align: center;
 }

@@ -3,8 +3,8 @@
 	<head>
 		<meta charset="utf-8">
 		<title>React • TodoMVC</title>
-		<link rel="stylesheet" href="node_modules/todomvc-common/base.css">
-		<link rel="stylesheet" href="node_modules/todomvc-app-css/index.css">
+		<link rel="stylesheet" href="external/todomvc-common/base.css">
+		<link rel="stylesheet" href="external/todomvc-app-css/index.css">
 		<link rel="stylesheet" href="css/app.css">
 	</head>
 	<body>
@@ -15,14 +15,11 @@
 			<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
 		</footer>
 
-		<section class="benchmark">
-			<button id="benchmarkbtn"> Run benchmark</button>
-			<section id="benchmarklog"></section>
-		</section>
+		<section id="bench" class="benchmark"> </section>
 
-		<script src="node_modules/todomvc-common/base.js"></script>
-		<script src="node_modules/react/dist/react-with-addons.js"></script>
-		<script src="node_modules/director/build/director.js"></script>
+		<script src="external/todomvc-common/base.js"></script>
+		<script src="external/react-with-addons.js"></script>
+		<script src="external/director.js"></script>
 
 		<script src="react/utils.js"></script>
 		<script src="react/todoModel.js"></script>

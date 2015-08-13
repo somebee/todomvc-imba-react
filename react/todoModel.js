@@ -19,6 +19,10 @@ var app = app || {};
 		this.onChanges = [];
 	};
 
+	app.TodoModel.prototype.items = function () {
+		return this.todos;
+	};
+
 	app.TodoModel.prototype.subscribe = function (onChange) {
 		this.onChanges.push(onChange);
 	};

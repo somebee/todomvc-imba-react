@@ -1,9 +1,30 @@
 (function(){
+	var self=this;
 	
 	// externs;
 	
+	
+	window.bench.innerHTML = "	<header>	<button id='benchmarkbtn'> Run benchmark</button>	<input id='benchmarktimes' value='2005' type='text' placeholder='times'/>	<span> times </span>	<input id='benchmarktodos' value='10' type='text' placeholder='todos'/>	<span> todos </span>	</header>	<section id='benchmarklog'></section>";
+	
 	var btn = window.benchmarkbtn;
 	var log = window.benchmarklog;
+	
+	btn.onclick = function(e) {
+		btn.textContent = "running benchmark";
+		var times = self.parseFloat(window.benchmarktimes.value || '1000') || 1000;
+		var todos = self.parseFloat(window.benchmarktodos.value || '10') || 10;
+		return setTimeout(function() {
+			return BENCH(times,todos);
+		},10);
+	};
+	
+	
+	// create 200 tasks
+	// var tasks = []
+	// var model = window.todosModel
+	// model.addTodo("Todo {i}") for i in [1..200]
+	// tasks = (model.@items or model:todos).slice
+	
 	
 	function bench(name,times,blk){
 		console.group(name);
@@ -12,17 +33,18 @@
 		var start = new Date();
 		
 		while ((i++) < times){
-			blk();
+			blk(i - 1);
 		};
 		
 		var end = new Date();
-		var time = (end - start) / 1000;
+		var time = (end - start);
+		var rps = (times / time) * 1000;
 		
 		console.timeEnd('time');
-		console.log(("" + ((times / time).toFixed(2)) + " render/sec"));
+		console.log(("" + (rps.toFixed(2)) + " op/sec"));
 		console.groupEnd(name);
 		log.innerHTML += ("<b>" + name + "</b><br>");
-		log.innerHTML += ("<div>(" + (time.toFixed(3)) + "s) - " + ((times / time).toFixed(2)) + " render/sec</div><br>");
+		log.innerHTML += ("<div>(" + (time.toFixed(2)) + "ms) - " + (rps.toFixed(2)) + " op/sec</div><br>");
 		return this;
 	};
 	
@@ -45,26 +67,42 @@
 		}; // warm up
 		
 		renderAlways = false;
-		bench(("render app " + times + " times - with shouldComponentUpdate optims"),times,function() {
+		bench(("render app " + times + " times - with shouldComponentUpdate optims"),times,function(i) {
 			return render();
 		});
 		
 		setTimeout(function() {
 			
 			renderAlways = true;
-			bench(("render app " + times + " times - including all todos (no optims)"),times,function() {
+			bench(("render app " + times + " times - including all todos (no optims)"),times,function(i) {
 				return render();
 			});
 			
 			renderAlways = false;
 			// we want to do this without informing about any changes,
 			// and without persisting. So we do it manually
-			var items = model._items || model.todos;
+			var items = model.items();
 			
 			
-			return bench(("moving todo from top to bottom and render " + times + " times"),times,function() {
+			bench(("moving todo from top to bottom and render " + times + " times"),times,function(i) {
 				items.push(items.shift()); // move item from top to bottom9
 				return render(); // render manually
+			});
+			
+			
+			var item = items.pop();
+			
+			bench("add todo,render,remove todo,render",times,function(i) {
+				items.push(item); // move item from top to bottom9
+				render(); // render manually
+				items.pop();
+				return render();
+			});
+			
+			return bench("rename task",times,function(i) {
+				var todo = model.items()[0];
+				return model.save(todo,("Todo renamed " + i));
+				// in both react and imba this should trigger a render itself
 			});
 			
 			// bench("moving todo from bottom to top and render {times} times", times) do
@@ -73,13 +111,6 @@
 		},0);
 		
 		return;
-	};
-	
-	btn.onclick = function(e) {
-		btn.textContent = "running benchmark";
-		return setTimeout(function() {
-			return BENCH(2005);
-		},10);
 	};
 
 })()

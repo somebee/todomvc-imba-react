@@ -55,6 +55,11 @@
 		return this.inform();
 	};
 	
+	TodoModel.prototype.save = function (item,title){
+		item.title = title;
+		return this.inform();
+	};
+	
 	TodoModel.prototype.clearCompleted = function (){
 		this.setItems(this.items().filter(function(item) {
 			return !item.completed;

@@ -40,6 +40,10 @@ global class TodoModel
 		item:title = title
 		inform
 
+	def save item, title
+		item:title = title
+		inform
+
 	def clearCompleted
 		items = items.filter do |item| !item:completed
 		inform
