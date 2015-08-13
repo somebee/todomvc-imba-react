@@ -66,7 +66,7 @@
 		tag.prototype.submit = function (){
 			this._editing = false;
 			var title = this._input.value().trim();
-			return title ? (this.model().rename(this.object(),title)) : (this.modal().destroy(this.object()));
+			return title ? (this.model().rename(this.object(),title)) : (this.model().destroy(this.object()));
 		};
 		
 		tag.prototype.onfocusout = function (e){

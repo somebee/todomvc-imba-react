@@ -52,7 +52,7 @@ tag todo < li
 	def submit
 		@editing = no
 		var title = @input.value.trim
-		title ? model.rename(object,title) : modal.destroy(object)
+		title ? model.rename(object,title) : model.destroy(object)
 
 	def onfocusout e
 		submit if @editing
