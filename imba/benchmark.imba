@@ -1,6 +1,4 @@
 
-extern window, document, renderAlways, parseInt
-
 
 window:bench:innerHTML = "
 	<header>
@@ -62,17 +60,17 @@ BENCH = do |times = 1000, tasks = 10|
 	# render a few times before starting
 	render() for i in [0..1000] # warm up
 
-	renderAlways = no
+	window:renderAlways = no
 	bench("render app {times} times - with shouldComponentUpdate optims", times) do |i|
 		render()
 
 	setTimeout(&,0) do
 
-		renderAlways = yes
+		window:renderAlways = yes
 		bench("render app {times} times - including all todos (no optims)", times) do |i|
 			render()
 
-		renderAlways = no
+		window:renderAlways = no
 		# we want to do this without informing about any changes,
 		# and without persisting. So we do it manually
 		var items = model.items
@@ -93,8 +91,12 @@ BENCH = do |times = 1000, tasks = 10|
 
 		bench("rename task", times) do |i|
 			var todo = model.items[0]
-			model.save(todo,"Todo renamed {i}")
+			var title = "Todo renamed {i}"
+			todo:_title = todo:title = title
+			render()
+			# model.save(todo,"Todo renamed {i}")
 			# in both react and imba this should trigger a render itself
+			# and a localStorage store
 
 		# bench("moving todo from bottom to top and render {times} times", times) do
 		# 	items.unshift( items.pop ) # move item from top to bottom9

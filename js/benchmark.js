@@ -1,7 +1,5 @@
 (function(){
 	
-	// externs;
-	
 	
 	window.bench.innerHTML = "	<header>	<button id='benchmarkbtn'> Run benchmark</button>	<input id='benchmarktimes' value='2005' type='text' placeholder='times'/>	<span> times </span>	<input id='benchmarktodos' value='10' type='text' placeholder='todos'/>	<span> todos </span>	</header>	<section id='benchmarklog'></section>";
 	
@@ -63,19 +61,19 @@
 			render();
 		}; // warm up
 		
-		renderAlways = false;
+		window.renderAlways = false;
 		bench(("render app " + times + " times - with shouldComponentUpdate optims"),times,function(i) {
 			return render();
 		});
 		
 		setTimeout(function() {
 			
-			renderAlways = true;
+			window.renderAlways = true;
 			bench(("render app " + times + " times - including all todos (no optims)"),times,function(i) {
 				return render();
 			});
 			
-			renderAlways = false;
+			window.renderAlways = false;
 			// we want to do this without informing about any changes,
 			// and without persisting. So we do it manually
 			var items = model.items();
@@ -98,8 +96,12 @@
 			
 			return bench("rename task",times,function(i) {
 				var todo = model.items()[0];
-				return model.save(todo,("Todo renamed " + i));
+				var title = ("Todo renamed " + i);
+				todo._title = todo.title = title;
+				return render();
+				// model.save(todo,"Todo renamed {i}")
 				// in both react and imba this should trigger a render itself
+				// and a localStorage store
 			});
 			
 			// bench("moving todo from bottom to top and render {times} times", times) do
