@@ -61,9 +61,7 @@
 	};
 	
 	TodoModel.prototype.clearCompleted = function (){
-		this.setItems(this.items().filter(function(item) {
-			return !item.completed;
-		}));
+		this.setItems(this.items().filter(function(item) { return !item.completed; }));
 		return this.inform();
 	};
 	
@@ -86,6 +84,5 @@
 		if (json != this._json) { localStorage.setItem(this._key,this._json = json) };
 		return this;
 	};
-	
 
 })()

@@ -1,5 +1,4 @@
 (function(){
-	var self=this;
 	
 	// externs;
 	
@@ -11,11 +10,9 @@
 	
 	btn.onclick = function(e) {
 		btn.textContent = "running benchmark";
-		var times = self.parseFloat(window.benchmarktimes.value || '1000') || 1000;
-		var todos = self.parseFloat(window.benchmarktodos.value || '10') || 10;
-		return setTimeout(function() {
-			return BENCH(times,todos);
-		},10);
+		var times = parseFloat(window.benchmarktimes.value || '1000') || 1000;
+		var todos = parseFloat(window.benchmarktodos.value || '10') || 10;
+		return setTimeout(function() { return BENCH(times,todos); },10);
 	};
 	
 	

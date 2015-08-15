@@ -36,12 +36,12 @@
 			this._hash = this.hash(todo);
 			
 			return this.flag('completed',(this.object().completed)).flag('editing',(this._editing)).setChildren(Imba.static([
-				(t0 = this.$a || (this.$a = t$('div'))).flag('view').setContent(Imba.static([
-					(t0.$$a = t0.$$a || t$('label')).setHandler('dblclick','edit').setContent(Imba.static([this.object().title],1)).end(),
-					(t0.$$b = t0.$$b || t$('input')).flag('toggle').setType('checkbox').setHandler('tap','toggle').setChecked((this.object().completed)).end(),
-					(t0.$$c = t0.$$c || t$('button')).flag('destroy').setHandler('tap','drop').end()
+				(t0 = this.$a || (this.$a = t$('div').flag('view'))).setContent(Imba.static([
+					(t0.$$a = t0.$$a || t$('label').setHandler('dblclick','edit')).setContent(Imba.static([this.object().title],1)).end(),
+					(t0.$$b = t0.$$b || t$('input').flag('toggle').setType('checkbox').setHandler('tap','toggle')).setChecked((this.object().completed)).end(),
+					(t0.$$c = t0.$$c || t$('button').flag('destroy').setHandler('tap','drop')).end()
 				],1)).end(),
-				(this._input = this._input || t$('input').setRef('input',this)).flag('edit').setType('text').setObject(this.object()).end()
+				(this._input = this._input || t$('input').setRef('input',this).flag('edit').setType('text')).setObject(this.object()).end()
 			],1)).synced();
 		};
 		
@@ -49,9 +49,7 @@
 			var self=this;
 			this._editing = true;
 			this._input.setValue(this.object().title);
-			setTimeout(function() {
-				return self._input.focus();
-			},10);
+			setTimeout(function() { return self._input.focus(); },10);
 			return self.render(); // only need to render this
 		};
 		

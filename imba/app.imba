@@ -1,32 +1,29 @@
-
-extern window
-
 var ESCAPE_KEY = 27
 var ENTER_KEY = 13
 
 Todos = TodoModel.new('imba-todos')
 
 # this makes it 10% faster. consider moving into imba runtime.
-extend tag htmlelement	
-	# optimization for flags 
-	def flag flag, bool
-		@flags ||= {}
-
-		if arguments:length == 2
-			if @flags[flag] != !!bool
-				bool ? @dom:classList.add(flag) : @dom:classList.remove(flag)
-				@flags[flag] = !!bool
-		elif !@flags[flag]
-			@dom:classList.add(flag)
-			@flags[flag] = yes
-
-		return self
-	def unflag flag
-		if @flags and @flags[flag]
-			@flags[flag] = no
-			@dom:classList.remove(flag)
-
-		return self
+# extend tag htmlelement	
+# 	# optimization for flags 
+# 	def flag flag, bool
+# 		@flags ||= {}
+# 
+# 		if arguments:length == 2
+# 			if @flags[flag] != !!bool
+# 				bool ? @dom:classList.add(flag) : @dom:classList.remove(flag)
+# 				@flags[flag] = !!bool
+# 		elif !@flags[flag]
+# 			@dom:classList.add(flag)
+# 			@flags[flag] = yes
+# 
+# 		return self
+# 	def unflag flag
+# 		if @flags and @flags[flag]
+# 			@flags[flag] = no
+# 			@dom:classList.remove(flag)
+# 
+# 		return self
 
 tag app
 

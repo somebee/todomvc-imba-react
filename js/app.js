@@ -1,40 +1,31 @@
 (function(){
 	function iter$(a){ return a ? (a.toArray ? a.toArray() : a) : []; };
-	
-	// externs;
-	
 	var ESCAPE_KEY = 27;
 	var ENTER_KEY = 13;
 	
 	Todos = new TodoModel('imba-todos');
 	
 	// this makes it 10% faster. consider moving into imba runtime.
-	Imba.extendTag('htmlelement', function(tag){
-		// optimization for flags 
-		tag.prototype.flag = function (flag,bool){
-			this._flags || (this._flags = {});
-			
-			if (arguments.length == 2) {
-				if (this._flags[flag] != !!bool) {
-					bool ? (this._dom.classList.add(flag)) : (this._dom.classList.remove(flag));
-					this._flags[flag] = !!bool;
-				};
-			} else if (!this._flags[flag]) {
-				this._dom.classList.add(flag);
-				this._flags[flag] = true;
-			};
-			
-			return this;
-		};
-		tag.prototype.unflag = function (flag){
-			if (this._flags && this._flags[flag]) {
-				this._flags[flag] = false;
-				this._dom.classList.remove(flag);
-			};
-			
-			return this;
-		};
-	});
+	// extend tag htmlelement	
+	// 	# optimization for flags 
+	// 	def flag flag, bool
+	// 		@flags ||= {}
+	// 
+	// 		if arguments:length == 2
+	// 			if @flags[flag] != !!bool
+	// 				bool ? @dom:classList.add(flag) : @dom:classList.remove(flag)
+	// 				@flags[flag] = !!bool
+	// 		elif !@flags[flag]
+	// 			@dom:classList.add(flag)
+	// 			@flags[flag] = yes
+	// 
+	// 		return self
+	// 	def unflag flag
+	// 		if @flags and @flags[flag]
+	// 			@flags[flag] = no
+	// 			@dom:classList.remove(flag)
+	// 
+	// 		return self
 	
 	Imba.defineTag('app', function(tag){
 		
@@ -51,12 +42,8 @@
 			self._counter = 0;
 			self._model = Todos;
 			self._model.load();
-			self._model.subscribe(function() {
-				return self.render();
-			});
-			window.addEventListener('hashchange',function() {
-				return self.render();
-			});
+			self._model.subscribe(function() { return self.render(); });
+			window.addEventListener('hashchange',function() { return self.render(); });
 			self.render();
 			return self;
 		};
@@ -87,25 +74,21 @@
 			var t0, self=this, t1, t2;
 			this._counter++;
 			var all = this.model().items();
-			var active = all.filter(function(todo) {
-				return !todo.completed;
-			});
-			var done = all.filter(function(todo) {
-				return todo.completed;
-			});
+			var active = all.filter(function(todo) { return !todo.completed; });
+			var done = all.filter(function(todo) { return todo.completed; });
 			
 			var items = {'#/completed': done,'#/active': active}[this.hash()] || all;
 			
 			return this.setChildren(Imba.static([
-				(t0 = this.$a || (this.$a = t$('header'))).flag('header').setContent(Imba.static([
+				(t0 = this.$a || (this.$a = t$('header').flag('header'))).setContent(Imba.static([
 					(t0.$$a = t0.$$a || t$('h1')).setText(("todos " + this._counter)).end(),
-					(t0.$$b = t0.$$b || t$('input')).flag('new-todo').setType('text').setPlaceholder('What needs to be done?').setAutofocus(true).end()
+					(t0.$$b = t0.$$b || t$('input').flag('new-todo').setType('text').setPlaceholder('What needs to be done?')).setAutofocus(true).end()
 				],1)).end(),
 				
 				(all.length > 0) && (Imba.static([
-					(t0 = self.$b || (self.$b = t$('section'))).flag('main').setContent(Imba.static([
-						(t0.$$a = t0.$$a || t$('input')).flag('toggle-all').setType('checkbox').setHandler('change','toggleAll').end(),
-						(t1 = t0.$$b || (t0.$$b = t$('ul'))).flag('todo-list').setContent(Imba.static([(function(t1) {
+					(t0 = self.$b || (self.$b = t$('section').flag('main'))).setContent(Imba.static([
+						(t0.$$a = t0.$$a || t$('input').flag('toggle-all').setType('checkbox').setHandler('change','toggleAll')).end(),
+						(t1 = t0.$$b || (t0.$$b = t$('ul').flag('todo-list'))).setContent(Imba.static([(function(t1) {
 							for (var i=0, ary=iter$(items), len=ary.length, todo, res=[]; i < len; i++) {
 								todo = ary[i];
 								res.push((t1['_' + todo.id] = t1['_' + todo.id] || t$('todo')).setObject(todo).end());
@@ -114,19 +97,19 @@
 						})(t1)],1)).end()
 					],1)).end(),
 					
-					(t0 = self.$c || (self.$c = t$('footer'))).flag('footer').setContent(Imba.static([
-						(t1 = t0.$$a || (t0.$$a = t$('span'))).flag('todo-count').setContent(Imba.static([
+					(t0 = self.$c || (self.$c = t$('footer').flag('footer'))).setContent(Imba.static([
+						(t1 = t0.$$a || (t0.$$a = t$('span').flag('todo-count'))).setContent(Imba.static([
 							(t1.$$a = t1.$$a || t$('strong')).setText(("" + (active.length) + " ")).end(),
 							active.length == 1 ? ('item left') : ('items left')
 						],1)).end(),
-						(t1 = t0.$$b || (t0.$$b = t$('ul'))).flag('filters').setContent(Imba.static([
-							(t2 = t1.$$a || (t1.$$a = t$('li'))).setContent(Imba.static([(t2.$$a = t2.$$a || t$('a')).flag('selected',(items == all)).setHref('#/').setText('All').end()],1)).end(),
-							(t2 = t1.$$b || (t1.$$b = t$('li'))).setContent(Imba.static([(t2.$$a = t2.$$a || t$('a')).flag('selected',(items == active)).setHref('#/active').setText('Active').end()],1)).end(),
-							(t2 = t1.$$c || (t1.$$c = t$('li'))).setContent(Imba.static([(t2.$$a = t2.$$a || t$('a')).flag('selected',(items == done)).setHref('#/completed').setText('Completed').end()],1)).end()
+						(t1 = t0.$$b || (t0.$$b = t$('ul').flag('filters'))).setContent(Imba.static([
+							(t2 = t1.$$a || (t1.$$a = t$('li'))).setContent(Imba.static([(t2.$$a = t2.$$a || t$('a').setHref('#/')).flag('selected',(items == all)).setText('All').end()],1)).end(),
+							(t2 = t1.$$b || (t1.$$b = t$('li'))).setContent(Imba.static([(t2.$$a = t2.$$a || t$('a').setHref('#/active')).flag('selected',(items == active)).setText('Active').end()],1)).end(),
+							(t2 = t1.$$c || (t1.$$c = t$('li'))).setContent(Imba.static([(t2.$$a = t2.$$a || t$('a').setHref('#/completed')).flag('selected',(items == done)).setText('Completed').end()],1)).end()
 						],1)).end(),
 						
 						(done.length > 0) && (
-							(t0.$$c = t0.$$c || t$('button')).flag('clear-completed').setHandler('tap','clearCompleted').setText('Clear completed').end()
+							(t0.$$c = t0.$$c || t$('button').flag('clear-completed').setHandler('tap','clearCompleted')).setText('Clear completed').end()
 						)
 					],1)).end()
 				],2))
@@ -146,9 +129,7 @@
 	
 	// now make things accessible for benchmark
 	window.todosRenderer = function (){
-		return function() {
-			return app.render();
-		};
+		return function() { return app.render(); };
 	};
 	
 	window.todosModel = function (){
