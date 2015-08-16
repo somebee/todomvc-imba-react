@@ -60,7 +60,7 @@
 			return this.setChildren(Imba.static([
 				(t0 = this.$a || (this.$a = t$('header').flag('header'))).setContent(Imba.static([
 					(t0.$$a = t0.$$a || t$('h1')).setText(("todos " + this._counter)).end(),
-					(t0.$$b = t0.$$b || t$('input').flag('new-todo').setType('text').setPlaceholder('What needs to be done?')).setAutofocus(true).end()
+					(t0.$$b = t0.$$b || t$('input').flag('new-todo').setType('text').setPlaceholder('What needs to be done?').setAutofocus(true)).end()
 				],1)).end(),
 				
 				(all.length > 0) && (Imba.static([
